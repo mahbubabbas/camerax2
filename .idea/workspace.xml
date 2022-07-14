@@ -5,30 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d90f47de-8a5d-4949-8d4a-5c1eee2d58ef" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/CameraXHandler.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/CameraXPlugin.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/Util.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/yanshouwang/camerax/CameraFace.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/yanshouwang/camerax/CameraXHandler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/yanshouwang/camerax/CameraXPlugin.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/yanshouwang/camerax/Util.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/debug/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/kotlin/dev/yanshouwang/camerax/example/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/kotlin/dev/yanshouwang/camerax/example/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/profile/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/profile/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/src/views/analyze_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/src/views/analyze_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/src/views/display_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/src/views/display_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/src/views/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/src/views/home_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/camerax.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/camerax2.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/camera_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/camera_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/face.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/face.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

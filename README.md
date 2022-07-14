@@ -9,8 +9,7 @@ A camera plugin for flutter, which use CameraX on Android, native API on iOS, su
 - [x] CameraView widget.
 - [x] Control the torch.
 - [x] Access to a face stream.
-- [x] Access to a barcode stream.
-- [ ] Photo capture ability.
+- [x] Photo capture ability.
 
 ## Getting Started
 
