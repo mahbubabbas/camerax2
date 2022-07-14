@@ -48,9 +48,9 @@ abstract class CameraController {
 
 class _CameraController implements CameraController {
   static const MethodChannel method =
-      MethodChannel('yanshouwang.dev/camerax/method');
+      MethodChannel('mahbubabbas.dev/camerax2/method');
   static const EventChannel event =
-      EventChannel('yanshouwang.dev/camerax/event');
+      EventChannel('mahbubabbas.dev/camerax2/event');
 
   static const undetermined = 0;
   static const authorized = 1;

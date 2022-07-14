@@ -26,8 +26,8 @@ class CameraXPlugin : FlutterPlugin, ActivityAware {
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding
         handler = CameraXHandler(activity!!.activity, flutter!!.textureRegistry)
-        method = MethodChannel(flutter!!.binaryMessenger, "yanshouwang.dev/camerax/method")
-        event = EventChannel(flutter!!.binaryMessenger, "yanshouwang.dev/camerax/event")
+        method = MethodChannel(flutter!!.binaryMessenger, "mahbubabbas.dev/camerax2/method")
+        event = EventChannel(flutter!!.binaryMessenger, "mahbubabbas.dev/camerax2/event")
         method!!.setMethodCallHandler(handler)
         event!!.setStreamHandler(handler)
         activity!!.addRequestPermissionsResultListener(handler!!)

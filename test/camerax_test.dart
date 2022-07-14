@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const channel = MethodChannel('yanshouwang.dev/camerax/method');
+  const channel = MethodChannel('mahbubabbas.dev/camerax2/method');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
