@@ -17,7 +17,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.10'
 }
 
-group 'dev.yanshouwang.camerax'
+group 'dev.mahbubabbas.camerax2'
 version '1.0-SNAPSHOT'
 
 rootProject.allprojects {

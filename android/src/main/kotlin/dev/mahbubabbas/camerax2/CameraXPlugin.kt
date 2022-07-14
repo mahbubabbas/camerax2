@@ -1,4 +1,4 @@
-package dev.yanshouwang.camerax
+package dev.mahbubabbas.camerax2
 
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin

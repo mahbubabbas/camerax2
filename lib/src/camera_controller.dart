@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +42,8 @@ abstract class CameraController {
 
   /// Release the resources of the camera.
   void dispose();
+
+  void capturePhoto();
 }
 
 class _CameraController implements CameraController {
@@ -142,6 +145,13 @@ class _CameraController implements CameraController {
   }
 
   @override
+  void capturePhoto() {
+    method.invokeMethod('capture', null).then((value) => {
+      print(value)
+    });
+  }
+
+  @override
   Future<void> startAsync() async {
     ensure('startAsync');
     // Check authorization state.
@@ -194,4 +204,5 @@ class _CameraController implements CameraController {
         'CameraController methods should not be used after calling dispose.';
     assert(hashCode == id, message);
   }
+
 }

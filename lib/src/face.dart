@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import "package:google_mlkit_commons/google_mlkit_commons.dart";
+import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 /// A human face detected in an image.
 class Face {

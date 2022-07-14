@@ -1,4 +1,4 @@
-library camerax;
+library camerax2;
 
 export 'src/barcode.dart';
 export 'src/camera_args.dart';

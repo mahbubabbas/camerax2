@@ -1,13 +1,21 @@
-package dev.yanshouwang.camerax
+package dev.mahbubabbas.camerax2
 
+import android.content.Context
 import android.graphics.Point
 import android.graphics.Rect
 import androidx.camera.core.Camera
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.face.Face
+import dev.mahbubabbas.camerax2.Constants.EXTERNAL_IMG_PATH
+import dev.mahbubabbas.camerax2.Constants.FILENAME_FORMAT
+import dev.mahbubabbas.camerax2.Constants.PHOTO_EXTENSION
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 val Any.TAG: String
     get() = javaClass.simpleName
@@ -120,7 +128,7 @@ val Face.data: Map<String, Any?>
         "rect" to boundingBox.data
     )
 
-val Rect.data : Map<String, Any?>
+val Rect.data: Map<String, Any?>
     get() = mapOf(
         "left" to left.toDouble(),
         "top" to top.toDouble(),
@@ -183,3 +191,27 @@ val Barcode.UrlBookmark.data: Map<String, Any?>
 
 val Barcode.WiFi.data: Map<String, Any?>
     get() = mapOf("encryptionType" to encryptionType, "password" to password, "ssid" to ssid)
+
+
+fun getFileName(): String {
+    return SimpleDateFormat(FILENAME_FORMAT, Locale.US)
+        .format(System.currentTimeMillis()) + PHOTO_EXTENSION
+}
+
+@Throws(IOException::class)
+fun getOutputDirectory(context: Context, gallery: String): File {
+    val path = File(EXTERNAL_IMG_PATH)
+    //lge("external path: $path")
+
+    val newFolder = File(path, gallery)
+    checkFolder(newFolder)
+    //lgd("new folder: ${newFolder.path}")
+
+    return newFolder
+}
+
+private fun checkFolder(f: File) { if (!f.exists()) f.mkdir()  }
+
+fun createFile(baseFolder: File, fileName: String): File {
+    return File(baseFolder, fileName)
+}

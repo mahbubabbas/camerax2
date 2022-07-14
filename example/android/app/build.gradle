@@ -33,7 +33,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "dev.yanshouwang.camerax.example"
+        applicationId "dev.mahbubabbas.camerax2.example"
         minSdkVersion 21
         targetSdkVersion 32
         versionCode flutterVersionCode.toInteger()

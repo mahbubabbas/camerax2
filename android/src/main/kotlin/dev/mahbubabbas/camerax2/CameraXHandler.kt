@@ -1,9 +1,12 @@
-package dev.yanshouwang.camerax
+package dev.mahbubabbas.camerax2
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Surface
 import androidx.annotation.IntDef
@@ -13,14 +16,23 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 //import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import io.flutter.plugin.common.*
 import io.flutter.view.TextureRegistry
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import dev.mahbubabbas.camerax2.Constants.GALLERY_TITLE
+import dev.mahbubabbas.camerax2.Constants.MERA_TYPE_JPEG
+import java.nio.file.Files.createFile
 
 class CameraXHandler(private val activity: Activity, private val textureRegistry: TextureRegistry) :
     MethodChannel.MethodCallHandler, EventChannel.StreamHandler,
@@ -36,6 +48,9 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
     private var camera: Camera? = null
     private var textureEntry: TextureRegistry.SurfaceTextureEntry? = null
 
+    private var imageCapture: ImageCapture? = null
+    lateinit var imgCaptureExecutor: ExecutorService
+
     @AnalyzeMode
     private var analyzeMode: Int = AnalyzeMode.NONE
 
@@ -46,6 +61,7 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
             "start" -> startNative(call, result)
             "torch" -> torchNative(call, result)
             "analyze" -> analyzeNative(call, result)
+            "capture" -> capturePhoto(call, result)
             "stop" -> stopNative(result)
             else -> result.notImplemented()
         }
@@ -63,12 +79,19 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
         // Can't get exact denied or not_determined state without request.
         // Just return not_determined when state isn't authorized
         val state =
-            if (ContextCompat.checkSelfPermission(
+            if (
+                ContextCompat.checkSelfPermission(
                     activity,
                     Manifest.permission.CAMERA
                 ) == PackageManager.PERMISSION_GRANTED
+                &&
+                ContextCompat.checkSelfPermission(
+                    activity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
             ) 1
             else 0
+
         result.success(state)
     }
 
@@ -77,14 +100,31 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
             if (requestCode != REQUEST_CODE) {
                 false
             } else {
-                val authorized = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                val authorized = grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED
+
                 result.success(authorized)
                 listener = null
                 true
             }
         }
-        val permissions = arrayOf(Manifest.permission.CAMERA)
+
+        val permissions =
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            )
+
         ActivityCompat.requestPermissions(activity, permissions, REQUEST_CODE)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                intent.addCategory("android.intent.category.DEFAULT")
+                intent.data = Uri.parse("package:${activity.applicationContext.packageName}")
+                ContextCompat.startActivity(activity, intent, null)
+            }
+        }
     }
 
     @SuppressLint("UnsafeOptInUsageError")
@@ -92,10 +132,15 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
         val future = ProcessCameraProvider.getInstance(activity)
         val executor = ContextCompat.getMainExecutor(activity)
 
+        imgCaptureExecutor = Executors.newSingleThreadExecutor()
+
         future.addListener({
             cameraProvider = future.get()
             textureEntry = textureRegistry.createSurfaceTexture()
             val textureId = textureEntry!!.id()
+
+            //for image capture
+            imageCapture = ImageCapture.Builder().build()
 
             // Preview
             val surfaceProvider = Preview.SurfaceProvider { request ->
@@ -168,15 +213,18 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
                     }
                 }
             }
+
             val analysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build().apply { setAnalyzer(executor, analyzer) }
+
             // Bind to lifecycle.
             val owner = activity as LifecycleOwner
             val selector =
                 if (call.arguments == 0) CameraSelector.DEFAULT_FRONT_CAMERA
                 else CameraSelector.DEFAULT_BACK_CAMERA
-            camera = cameraProvider!!.bindToLifecycle(owner, selector, preview, analysis)
+            camera =
+                cameraProvider!!.bindToLifecycle(owner, selector, preview, analysis, imageCapture)
             camera!!.cameraInfo.torchState.observe(owner) { state ->
                 // TorchState.OFF = 0; TorchState.ON = 1
                 val event = mapOf("name" to "torchState", "data" to state)
@@ -222,6 +270,57 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
         cameraProvider = null
 
         result.success(null)
+    }
+
+    //capture photo
+    private fun capturePhoto(call: MethodCall, result: MethodChannel.Result) {
+        imageCapture?.let {
+            val fileName = getFileName()
+
+            var outputFileOptions: ImageCapture.OutputFileOptions? = null
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                // image path
+                val imageDir = getOutputDirectory(activity, GALLERY_TITLE)
+                val isImageDirCreated: Boolean = imageDir.exists()
+                if (isImageDirCreated) {
+                    val newImage = createFile(imageDir, fileName)
+                    outputFileOptions = ImageCapture.OutputFileOptions.Builder(newImage).build()
+                } else {
+                    Log.i(TAG, "Failed to create image directory!")
+                }
+            } else {
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, MERA_TYPE_JPEG)
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "Pictures/$GALLERY_TITLE")
+                }
+
+                outputFileOptions = ImageCapture.OutputFileOptions.Builder(
+                    activity.contentResolver,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    contentValues
+                ).build()
+            }
+
+            it.takePicture(
+                outputFileOptions!!,
+                imgCaptureExecutor,
+                object : ImageCapture.OnImageSavedCallback {
+                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                        result.success(outputFileResults.savedUri?.path)
+                        Log.i(
+                            TAG,
+                            "The image has been saved in ${outputFileResults.savedUri?.path}"
+                        )
+                    }
+
+                    override fun onError(exception: ImageCaptureException) {
+                        result.error("IMAGE_CAPTURE_ERROR", exception.message, "")
+                        Log.d(TAG, "Error taking photo:$exception")
+                    }
+                })
+        }
     }
 
     override fun onRequestPermissionsResult(

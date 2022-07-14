@@ -1,4 +1,4 @@
-import 'package:camerax/camerax.dart';
+import 'package:camerax2/camerax2.dart';
 import 'package:flutter/material.dart';
 
 class AnalyzeView extends StatefulWidget {
@@ -8,22 +8,22 @@ class AnalyzeView extends StatefulWidget {
 
 class _AnalyzeViewState extends State<AnalyzeView>
     with SingleTickerProviderStateMixin {
-  late CameraController cameraController;
-  late AnimationController animationConrtroller;
-  late Animation<double> offsetAnimation;
-  late Animation<double> opacityAnimation;
+  late CameraController _cameraController;
+  late AnimationController _animController;
+  late Animation<double> _offsetAnimation;
+  late Animation<double> _opacityAnimation;
 
   @override
   void initState() {
     super.initState();
-    cameraController = CameraController();
+    _cameraController = CameraController();
 
-    animationConrtroller =
+    _animController =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
-    offsetAnimation = Tween(begin: 0.2, end: 0.8).animate(animationConrtroller);
-    opacityAnimation =
-        CurvedAnimation(parent: animationConrtroller, curve: OpacityCurve());
-    animationConrtroller.repeat();
+    _offsetAnimation = Tween(begin: 0.2, end: 0.8).animate(_animController);
+    _opacityAnimation =
+        CurvedAnimation(parent: _animController, curve: OpacityCurve());
+    _animController.repeat();
 
     start();
   }
@@ -31,59 +31,37 @@ class _AnalyzeViewState extends State<AnalyzeView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('CameraX2'),
+      ),
       body: Stack(
         children: [
-          CameraView(cameraController),
-          AnimatedLine(
-            offsetAnimation: offsetAnimation,
-            opacityAnimation: opacityAnimation,
-          ),
-          Positioned(
-            left: 24.0,
-            top: 32.0,
-            child: IconButton(
-              icon: Icon(Icons.cancel, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          // Container(
-          //   alignment: Alignment.bottomCenter,
-          //   margin: EdgeInsets.only(bottom: 80.0),
-          //   child: IconButton(
-          //     icon: ValueListenableBuilder(
-          //       valueListenable: cameraController.torchState,
-          //       builder: (context, state, child) {
-          //         final color =
-          //             state == TorchState.off ? Colors.grey : Colors.white;
-          //         return Icon(Icons.bolt, color: color);
-          //       },
-          //     ),
-          //     iconSize: 32.0,
-          //     onPressed: () => cameraController.torch(),
-          //   ),
-          // ),
+          CameraView(_cameraController),
           StreamBuilder<Face?>(
-            stream: cameraController.faces,
+            stream: _cameraController.faces,
             builder: (
               BuildContext context,
               AsyncSnapshot<Face?> snapshot,
             ) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text('');
+                return _cameraIcon(false);
               } else if (snapshot.connectionState == ConnectionState.active ||
                   snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
-                  return const Text('');
+                  return _cameraIcon(false);
                 } else if (snapshot.hasData) {
-                  return Padding(
-                    padding: EdgeInsets.all(40),
-                    child: CustomPaint(
-                      size: MediaQuery.of(context).size,
-                      painter: FacePainter(snapshot.data!.boundingBox),
+                  return Stack(children: [
+                    Padding(
+                      padding: EdgeInsets.all(40),
+                      child: CustomPaint(
+                        size: MediaQuery.of(context).size,
+                        painter: FacePainter(snapshot.data!.boundingBox),
+                      ),
                     ),
-                  );
+                    _cameraIcon(true),
+                  ]);
                 } else {
-                  return const Text('');
+                  return _cameraIcon(false);
                 }
               } else {
                 return Text('State: ${snapshot.connectionState}');
@@ -95,19 +73,46 @@ class _AnalyzeViewState extends State<AnalyzeView>
     );
   }
 
+  Widget _cameraIcon(bool isFacePresent) {
+    return Stack(
+      children: [
+        !isFacePresent
+            ? AnimatedLine(
+                offsetAnimation: _offsetAnimation,
+                opacityAnimation: _opacityAnimation,
+              )
+            : Container(),
+        Container(
+          alignment: Alignment.bottomCenter,
+          margin: EdgeInsets.only(bottom: 40.0),
+          child: IconButton(
+            icon: Icon(Icons.circle_outlined,
+                color: isFacePresent ? Colors.white : Colors.grey),
+            iconSize: 70.0,
+            onPressed: () => isFacePresent? _cameraController.capturePhoto() : null,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void capturePhoto() {
+    _cameraController.capturePhoto();
+  }
+
   @override
   void dispose() {
-    animationConrtroller.dispose();
-    cameraController.dispose();
+    _animController.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
 
   void start() async {
-    await cameraController.startAsync();
+    await _cameraController.startAsync();
     try {
       // final barcode = await cameraController.barcodes.first;
       // display(barcode);
-      final face = await cameraController.faces.first;
+      final face = await _cameraController.faces.first;
       print('abbas: $face');
     } catch (e) {
       print(e);
@@ -167,7 +172,7 @@ class LinePainter extends CustomPainter {
     final paint = Paint()
       ..isAntiAlias = true
       ..shader = RadialGradient(
-        colors: [Colors.green, Colors.green.withOpacity(0.0)],
+        colors: [Colors.greenAccent, Colors.greenAccent.withOpacity(0.0)],
         radius: 0.5,
       ).createShader(rect);
     canvas.translate(0.0, size.height * offset);

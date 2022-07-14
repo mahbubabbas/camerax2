@@ -5,13 +5,13 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CameraX'),
+        title: const Text('CameraX2'),
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(40.0),
           child: Text(
-            'Click the camera button at bottom to start scan:)',
+            'Click the camera button at bottom to start scan',
             style: TextStyle(fontSize: 20.0),
             textAlign: TextAlign.center,
           ),
