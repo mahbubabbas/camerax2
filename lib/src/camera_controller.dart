@@ -43,7 +43,7 @@ abstract class CameraController {
   /// Release the resources of the camera.
   void dispose();
 
-  void capturePhoto();
+  Future<dynamic> capturePhoto();
 }
 
 class _CameraController implements CameraController {
@@ -145,10 +145,8 @@ class _CameraController implements CameraController {
   }
 
   @override
-  void capturePhoto() {
-    method.invokeMethod('capture', null).then((value) => {
-      print(value)
-    });
+  Future<dynamic> capturePhoto() {
+    return method.invokeMethod('capture', null);
   }
 
   @override

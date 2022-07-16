@@ -89,15 +89,17 @@ class _AnalyzeViewState extends State<AnalyzeView>
             icon: Icon(Icons.circle_outlined,
                 color: isFacePresent ? Colors.white : Colors.grey),
             iconSize: 70.0,
-            onPressed: () => isFacePresent? _cameraController.capturePhoto() : null,
+            onPressed: () => isFacePresent? capturePhoto() : null,
           ),
         ),
       ],
     );
   }
 
-  void capturePhoto() {
-    _cameraController.capturePhoto();
+  void capturePhoto() async {
+    var photoPath = await _cameraController.capturePhoto();
+    //TODO: use this path for further processing
+    print(photoPath);
   }
 
   @override

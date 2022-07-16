@@ -10,8 +10,6 @@ import com.google.mlkit.vision.face.Face
 import dev.mahbubabbas.camerax2.Constants.EXTERNAL_IMG_PATH
 import dev.mahbubabbas.camerax2.Constants.FILENAME_FORMAT
 import dev.mahbubabbas.camerax2.Constants.PHOTO_EXTENSION
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat

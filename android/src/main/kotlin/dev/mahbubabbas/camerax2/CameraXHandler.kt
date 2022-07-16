@@ -308,10 +308,10 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
                 imgCaptureExecutor,
                 object : ImageCapture.OnImageSavedCallback {
                     override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        result.success(outputFileResults.savedUri?.path)
+                        result.success(outputFileResults.savedUri?.path + '/' + fileName)
                         Log.i(
                             TAG,
-                            "The image has been saved in ${outputFileResults.savedUri?.path}"
+                            "The image has been saved in ${outputFileResults.savedUri?.path}/${fileName}"
                         )
                     }
 
