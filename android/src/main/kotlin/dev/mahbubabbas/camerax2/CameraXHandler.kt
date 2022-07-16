@@ -182,10 +182,12 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
                         val realTimeOpts = FaceDetectorOptions.Builder()
                             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
                             .setContourMode(FaceDetectorOptions.CONTOUR_MODE_NONE)
+                            .setMinFaceSize(0.5f)
                             .build()
 
                         val scanner = FaceDetection.getClient(realTimeOpts)
-                        scanner.process(inputImage)
+                        scanner
+                            .process(inputImage)
                             .addOnSuccessListener { faces ->
                                 if (faces.size > 0) {
                                     for (face in faces) {
@@ -225,6 +227,7 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
                 else CameraSelector.DEFAULT_BACK_CAMERA
             camera =
                 cameraProvider!!.bindToLifecycle(owner, selector, preview, analysis, imageCapture)
+
             camera!!.cameraInfo.torchState.observe(owner) { state ->
                 // TorchState.OFF = 0; TorchState.ON = 1
                 val event = mapOf("name" to "torchState", "data" to state)

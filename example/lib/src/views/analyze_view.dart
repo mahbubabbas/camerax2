@@ -13,6 +13,8 @@ class _AnalyzeViewState extends State<AnalyzeView>
   late Animation<double> _offsetAnimation;
   late Animation<double> _opacityAnimation;
 
+  late Size _cameraSize;
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,8 @@ class _AnalyzeViewState extends State<AnalyzeView>
 
   @override
   Widget build(BuildContext context) {
+    var _overlaySize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('CameraX2'),
@@ -55,7 +59,11 @@ class _AnalyzeViewState extends State<AnalyzeView>
                       padding: EdgeInsets.all(40),
                       child: CustomPaint(
                         size: MediaQuery.of(context).size,
-                        painter: FacePainter(snapshot.data!.boundingBox),
+                        painter: FacePainter(
+                          snapshot.data!.boundingBox,
+                          cameraSize: _cameraSize,
+                          overlaySize: _overlaySize,
+                        ),
                       ),
                     ),
                     _cameraIcon(true),
@@ -89,7 +97,7 @@ class _AnalyzeViewState extends State<AnalyzeView>
             icon: Icon(Icons.circle_outlined,
                 color: isFacePresent ? Colors.white : Colors.grey),
             iconSize: 70.0,
-            onPressed: () => isFacePresent? capturePhoto() : null,
+            onPressed: () => isFacePresent ? capturePhoto() : null,
           ),
         ),
       ],
@@ -115,6 +123,7 @@ class _AnalyzeViewState extends State<AnalyzeView>
       // final barcode = await cameraController.barcodes.first;
       // display(barcode);
       final face = await _cameraController.faces.first;
+      _cameraSize = _cameraController.getSize();
       print('abbas: $face');
     } catch (e) {
       print(e);
@@ -191,12 +200,46 @@ class LinePainter extends CustomPainter {
 
 class FacePainter extends CustomPainter {
   final Rect r;
+  final Size cameraSize;
+  final Size overlaySize;
+  final CameraFacing? facing;
 
-  FacePainter(this.r);
+  FacePainter(
+    this.r, {
+    required this.cameraSize,
+    required this.overlaySize,
+    this.facing = CameraFacing.front,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
+
+    final scaleX = size.width / cameraSize.width;
+    final scaleY = size.height / cameraSize.height;
+
+    var scale = scaleY;
+    if (scaleX > scaleY) {
+      scale = scaleX;
+    }
+
+    final offsetX = (size.width - (cameraSize.width * scale).ceil()) / 2.0;
+    final offsetY = (size.height - (cameraSize.height * scale).ceil()) / 2.0;
+    final centerX = size.width / 2.0;
+
+    var isFrontMode = facing == CameraFacing.front;
+
+    var left = r.right  + offsetX;
+    var top = r.top  + offsetY;
+    var right = r.left  + offsetX;
+    var bottom = r.bottom  + offsetY;
+
+    var mappedBox = Rect.fromLTRB(
+      isFrontMode ? centerX + (centerX - left) : left,
+      top,
+      isFrontMode ? centerX - (right - centerX) : right,
+      bottom,
+    );
 
     final paint = Paint()
       ..isAntiAlias = true
@@ -204,8 +247,7 @@ class FacePainter extends CustomPainter {
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
 
-    canvas.translate(0.0, size.height * 0.1);
-    var rr = RRect.fromRectAndRadius(r, Radius.circular(10));
+    var rr = RRect.fromRectAndRadius(mappedBox, Radius.circular(10));
     canvas.drawRRect(rr, paint);
 
     canvas.restore();

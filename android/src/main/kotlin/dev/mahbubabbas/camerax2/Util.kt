@@ -121,20 +121,6 @@ val Barcode.data: Map<String, Any?>
         "url" to url?.data, "wifi" to wifi?.data
     )
 
-val Face.data: Map<String, Any?>
-    get() = mapOf(
-        "rect" to boundingBox.data
-    )
-
-val Rect.data: Map<String, Any?>
-    get() = mapOf(
-        "left" to left.toDouble(),
-        "top" to top.toDouble(),
-        "right" to right.toDouble(),
-        "bottom" to bottom.toDouble()
-    )
-
-
 val Point.data: Map<String, Double>
     get() = mapOf("x" to x.toDouble(), "y" to y.toDouble())
 
@@ -190,7 +176,22 @@ val Barcode.UrlBookmark.data: Map<String, Any?>
 val Barcode.WiFi.data: Map<String, Any?>
     get() = mapOf("encryptionType" to encryptionType, "password" to password, "ssid" to ssid)
 
+//Face data
+val Face.data: Map<String, Any?>
+    get() = mapOf(
+        "rect" to boundingBox.data
+    )
 
+val Rect.data: Map<String, Any?>
+    get() = mapOf(
+        "left" to left.toDouble(),
+        "top" to top.toDouble(),
+        "right" to right.toDouble(),
+        "bottom" to bottom.toDouble()
+    )
+
+
+//Capture photo
 fun getFileName(): String {
     return SimpleDateFormat(FILENAME_FORMAT, Locale.US)
         .format(System.currentTimeMillis()) + PHOTO_EXTENSION

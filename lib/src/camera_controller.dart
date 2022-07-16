@@ -11,7 +11,6 @@ import 'face.dart';
 import 'torch_state.dart';
 import 'util.dart';
 
-
 /// A camera controller.
 abstract class CameraController {
   /// Arguments for [CameraView].
@@ -43,6 +42,8 @@ abstract class CameraController {
   /// Release the resources of the camera.
   void dispose();
 
+  Size getSize();
+
   Future<dynamic> capturePhoto();
 }
 
@@ -59,6 +60,8 @@ class _CameraController implements CameraController {
   static const analyze_none = 0;
   static const analyze_barcode = 1;
   static const analyze_face = 2;
+
+  late Size? size;
 
   static int? id;
   static StreamSubscription? subscription;
@@ -165,8 +168,8 @@ class _CameraController implements CameraController {
     final answer =
         await method.invokeMapMethod<String, dynamic>('start', facing.index);
     final textureId = answer?['textureId'];
-    final size = toSize(answer?['size']);
-    args.value = CameraArgs(textureId, size);
+    size = toSize(answer?['size']);
+    args.value = CameraArgs(textureId, size!);
     torchable = answer?['torchable'];
   }
 
@@ -203,4 +206,8 @@ class _CameraController implements CameraController {
     assert(hashCode == id, message);
   }
 
+  @override
+  Size getSize() {
+    return size!;
+  }
 }
