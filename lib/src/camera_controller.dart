@@ -129,9 +129,9 @@ class _CameraController implements CameraController {
           //final h = imageSize.width;
           //imageSize = Size(h, w);
         } else {
-          final w = imageSize.width;
+          final w = imageSize.height;
           final h = imageSize.width;
-          imageSize = Size(h, w);
+          imageSize = Size(w, h);
         }
         facesController.add(FaceInfo(face, imageSize));
         break;

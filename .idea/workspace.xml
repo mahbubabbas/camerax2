@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d90f47de-8a5d-4949-8d4a-5c1eee2d58ef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/CameraXHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/CameraXHandler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/Util.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/Util.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/src/views/analyze_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/src/views/analyze_view.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/camera_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/camera_controller.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -97,6 +95,11 @@
           <url>file://$PROJECT_DIR$/../../../Program Files/flutter/packages/flutter/lib/src/services/binding.dart</url>
           <line>381</line>
           <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/src/camera_controller.dart</url>
+          <line>133</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
