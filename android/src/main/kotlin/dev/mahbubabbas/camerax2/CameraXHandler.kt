@@ -193,7 +193,11 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
                                     for (face in faces) {
                                         val event = mapOf(
                                             "name" to "face",
-                                            "data" to face.data
+                                            "data" to face.data,
+                                            "imageSize" to mapOf(
+                                                "width" to imageProxy.width.toDouble(),
+                                                "height" to imageProxy.height.toDouble()
+                                            )
                                         )
                                         sink?.success(event)
                                     }
@@ -243,9 +247,18 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
             val size = if (portrait) mapOf(
                 "width" to width,
                 "height" to height
-            ) else mapOf("width" to height, "height" to width)
+            ) else mapOf(
+                "width" to height,
+                "height" to width
+            )
+
             val answer =
-                mapOf("textureId" to textureId, "size" to size, "torchable" to camera!!.torchable)
+                mapOf(
+                    "textureId" to textureId,
+                    "size" to size,
+                    "portrait" to portrait,
+                    "torchable" to camera!!.torchable
+                )
             result.success(answer)
         }, executor)
     }

@@ -179,7 +179,7 @@ val Barcode.WiFi.data: Map<String, Any?>
 //Face data
 val Face.data: Map<String, Any?>
     get() = mapOf(
-        "rect" to boundingBox.data
+        "rect" to boundingBox.data,
     )
 
 val Rect.data: Map<String, Any?>

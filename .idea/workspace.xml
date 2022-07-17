@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="d90f47de-8a5d-4949-8d4a-5c1eee2d58ef" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/CameraXHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/CameraXHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/Util.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/Util.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/src/views/analyze_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/src/views/analyze_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/camera_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/camera_controller.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,3 +1,6 @@
+## 0.0.5
+- Adjusting face bounding box
+
 ## 0.0.4
 - Adjusting face bounding box
 

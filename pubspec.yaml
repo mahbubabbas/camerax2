@@ -1,6 +1,6 @@
 name: camerax2
 description: A camera plugin for flutter, which use CameraX on Android, native API on iOS, supports camera preview, capture and analyze face detection.
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/mahbubabbas/camerax2
 publish_to:
 

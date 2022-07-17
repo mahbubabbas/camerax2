@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +22,7 @@ abstract class CameraController {
   Stream<Barcode> get barcodes;
 
   /// A stream of faces
-  Stream<Face?> get faces;
+  Stream<FaceInfo?> get faces;
 
   /// Create a [CameraController].
   ///
@@ -41,8 +40,6 @@ abstract class CameraController {
 
   /// Release the resources of the camera.
   void dispose();
-
-  Size getSize();
 
   Future<dynamic> capturePhoto();
 }
@@ -62,25 +59,28 @@ class _CameraController implements CameraController {
   static const analyze_face = 2;
 
   late Size? size;
+  late bool portrait = false;
 
   static int? id;
   static StreamSubscription? subscription;
 
   final CameraFacing facing;
+
   @override
   final ValueNotifier<CameraArgs?> args;
+
   @override
   final ValueNotifier<TorchState> torchState;
 
   bool torchable;
   late StreamController<Barcode> barcodesController;
-  late StreamController<Face?> facesController;
+  late StreamController<FaceInfo?> facesController;
 
   @override
   Stream<Barcode> get barcodes => barcodesController.stream;
 
   @override
-  Stream<Face?> get faces => facesController.stream;
+  Stream<FaceInfo?> get faces => facesController.stream;
 
   _CameraController(this.facing)
       : args = ValueNotifier(null),
@@ -123,7 +123,17 @@ class _CameraController implements CameraController {
     switch (name) {
       case 'face':
         final face = Face.fromJson(data);
-        facesController.add(face);
+        var imageSize = toSize(event['imageSize']);
+        if (portrait) {
+          //final w = imageSize.width;
+          //final h = imageSize.width;
+          //imageSize = Size(h, w);
+        } else {
+          final w = imageSize.width;
+          final h = imageSize.width;
+          imageSize = Size(h, w);
+        }
+        facesController.add(FaceInfo(face, imageSize));
         break;
       case 'torchState':
         final state = TorchState.values[data];
@@ -164,11 +174,13 @@ class _CameraController implements CameraController {
     if (state != authorized) {
       throw PlatformException(code: 'NO ACCESS');
     }
+
     // Start camera.
     final answer =
         await method.invokeMapMethod<String, dynamic>('start', facing.index);
     final textureId = answer?['textureId'];
     size = toSize(answer?['size']);
+    portrait = answer?["portrait"];
     args.value = CameraArgs(textureId, size!);
     torchable = answer?['torchable'];
   }
@@ -210,4 +222,14 @@ class _CameraController implements CameraController {
   Size getSize() {
     return size!;
   }
+}
+
+class FaceInfo {
+  final Face? face;
+  final Size? imageSize;
+
+  FaceInfo(
+    this.face,
+    this.imageSize,
+  );
 }
