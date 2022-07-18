@@ -7,7 +7,11 @@
     <list default="true" id="d90f47de-8a5d-4949-8d4a-5c1eee2d58ef" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/camera_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/camera_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/CameraXHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/CameraXHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/Util.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/mahbubabbas/camerax2/Util.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/src/views/analyze_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/src/views/analyze_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,9 +101,9 @@
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/src/camera_controller.dart</url>
-          <line>133</line>
-          <option name="timeStamp" value="22" />
+          <url>file://$PROJECT_DIR$/example/lib/src/views/analyze_view.dart</url>
+          <line>131</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -32,6 +32,8 @@ import android.os.Build
 import android.provider.Settings
 import dev.mahbubabbas.camerax2.Constants.GALLERY_TITLE
 import dev.mahbubabbas.camerax2.Constants.MERA_TYPE_JPEG
+import io.flutter.util.PathUtils
+import java.io.File
 import java.nio.file.Files.createFile
 
 class CameraXHandler(private val activity: Activity, private val textureRegistry: TextureRegistry) :
@@ -298,6 +300,7 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
                 // image path
                 val imageDir = getOutputDirectory(activity, GALLERY_TITLE)
+
                 val isImageDirCreated: Boolean = imageDir.exists()
                 if (isImageDirCreated) {
                     val newImage = createFile(imageDir, fileName)
@@ -324,11 +327,12 @@ class CameraXHandler(private val activity: Activity, private val textureRegistry
                 imgCaptureExecutor,
                 object : ImageCapture.OnImageSavedCallback {
                     override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        result.success(outputFileResults.savedUri?.path + '/' + fileName)
                         Log.i(
                             TAG,
                             "The image has been saved in ${outputFileResults.savedUri?.path}/${fileName}"
                         )
+                        //result.success(outputFileResults.savedUri?.path)
+                        result.success(getRealPathFromUri(activity, outputFileResults.savedUri))
                     }
 
                     override fun onError(exception: ImageCaptureException) {

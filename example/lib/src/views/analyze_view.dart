@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camerax2/camerax2.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +15,10 @@ class _AnalyzeViewState extends State<AnalyzeView>
   late Animation<double> _offsetAnimation;
   late Animation<double> _opacityAnimation;
 
-  late Size _cameraSize;
   Size? imageSize;
+  bool _isProcessing = false;
+  bool _photoCaptured = false;
+  String? _imagePath;
 
   @override
   void initState() {
@@ -39,45 +43,56 @@ class _AnalyzeViewState extends State<AnalyzeView>
       appBar: AppBar(
         title: Text('CameraX2'),
       ),
-      body: Stack(
-        children: [
-          CameraView(_cameraController),
-          StreamBuilder<FaceInfo?>(
-            stream: _cameraController.faces,
-            builder: (
-              BuildContext context,
-              AsyncSnapshot<FaceInfo?> snapshot,
-            ) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return _cameraIcon(false);
-              } else if (snapshot.connectionState == ConnectionState.active ||
-                  snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return _cameraIcon(false);
-                } else if (snapshot.hasData) {
-                  return Stack(children: [
-                    Padding(
-                      padding: EdgeInsets.all(40),
-                      child: CustomPaint(
-                        size: MediaQuery.of(context).size,
-                        painter: FacePainter(
-                          snapshot.data!.face!.boundingBox,
-                          imageSize: snapshot.data!.imageSize!,
-                        ),
-                      ),
-                    ),
-                    _cameraIcon(true),
-                  ]);
-                } else {
-                  return _cameraIcon(false);
-                }
-              } else {
-                return Text('State: ${snapshot.connectionState}');
-              }
-            },
-          ),
-        ],
-      ),
+      body: _photoCaptured
+          ? Container(
+              decoration: BoxDecoration(
+                color: Colors.blueAccent,
+                image: DecorationImage(
+                  image: FileImage(File(_imagePath!)),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
+          : Stack(
+              children: [
+                CameraView(_cameraController),
+                StreamBuilder<FaceInfo?>(
+                  stream: _cameraController.faces,
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot<FaceInfo?> snapshot,
+                  ) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _cameraIcon(false);
+                    } else if (snapshot.connectionState ==
+                            ConnectionState.active ||
+                        snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return _cameraIcon(false);
+                      } else if (snapshot.hasData) {
+                        return Stack(children: [
+                          Padding(
+                            padding: EdgeInsets.all(40),
+                            child: CustomPaint(
+                              size: MediaQuery.of(context).size,
+                              painter: FacePainter(
+                                snapshot.data!.face!.boundingBox,
+                                imageSize: snapshot.data!.imageSize!,
+                              ),
+                            ),
+                          ),
+                          _cameraIcon(true),
+                        ]);
+                      } else {
+                        return _cameraIcon(false);
+                      }
+                    } else {
+                      return Text('State: ${snapshot.connectionState}');
+                    }
+                  },
+                ),
+              ],
+            ),
     );
   }
 
@@ -93,21 +108,39 @@ class _AnalyzeViewState extends State<AnalyzeView>
         Container(
           alignment: Alignment.bottomCenter,
           margin: EdgeInsets.only(bottom: 40.0),
-          child: IconButton(
-            icon: Icon(Icons.circle_outlined,
-                color: isFacePresent ? Colors.white : Colors.grey),
-            iconSize: 70.0,
-            onPressed: () => isFacePresent ? capturePhoto() : null,
-          ),
+          child: _isProcessing
+              ? CircularProgressIndicator()
+              : IconButton(
+                  icon: Icon(Icons.circle_outlined,
+                      color: isFacePresent ? Colors.white : Colors.grey),
+                  iconSize: 70.0,
+                  onPressed: () => isFacePresent ? capturePhoto() : null,
+                ),
         ),
       ],
     );
   }
 
   void capturePhoto() async {
-    var photoPath = await _cameraController.capturePhoto();
-    //TODO: use this path for further processing
-    print(photoPath);
+    setState(() {
+      _isProcessing = true;
+      _photoCaptured = false;
+    });
+    _imagePath = await _cameraController.capturePhoto();
+
+    setState(() {
+      _isProcessing = false;
+      if (_imagePath != null) {
+        _photoCaptured = true;
+      }
+    });
+
+    try {
+      _animController.dispose();
+      _cameraController.dispose();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

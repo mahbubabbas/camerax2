@@ -1,3 +1,10 @@
+## 0.0.7
+- Bug fixing in photo capture
+- Preview captured photo
+
+## 0.0.6
+- Fixing face bounding box size
+
 ## 0.0.5
 - Adjusting face bounding box
 
